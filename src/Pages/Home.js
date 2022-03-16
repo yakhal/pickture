@@ -1,24 +1,30 @@
 import Navbar from "../components/NavBar";
-// import {AiOutlineSearch} from "react-icons/ai";
+import { AiOutlineSearch } from "react-icons/ai";
 import { useEffect, useState } from "react";
 import ReactLoading from "react-loading";
 import Axios from "axios";
 import "./Home.css";
+
 function Home() {
-  const url =
-    "https://api.unsplash.com/photos/random?count=30&orientation=squarish&client_id=X-dZbH81rHSPiOjPkTLW-p74vx5cwfL4Qcef2LzqPwQ";
+  const [input, setInput] = useState("");
+  const [searchTerm, setSearchTerm] = useState("random");
   const [images, setImages] = useState([]);
 
-  const getImages = () => {
-    Axios.get(url).then((res) => {
-      setImages(res.data);
-      console.log(res);
-    });
-  };
-
   useEffect(() => {
-    getImages();
-  }, []);
+    const getImages = (query) => {
+      const url = `https://api.unsplash.com/search/photos?query=${query}&order_by=latest&per_page=30&orientation=squarish&client_id=X-dZbH81rHSPiOjPkTLW-p74vx5cwfL4Qcef2LzqPwQ`;
+      Axios.get(url).then((res) => {
+        setImages(res.data.results);
+        // console.log(res.data.results);
+      });
+    };
+    getImages(searchTerm);
+  }, [searchTerm]);
+
+  const onSubmitHandler = (event) => {
+    event.preventDefault();
+    setSearchTerm(input);
+  }
 
   if (!images) {
     return (
@@ -31,6 +37,16 @@ function Home() {
   return (
     <>
       <Navbar />
+      <form onSubmit={onSubmitHandler} className="search-bar">
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          type="text"
+        />
+        <button>
+          <AiOutlineSearch />
+        </button>
+      </form>
       <div className="image-grid">
         {images.map((image) => {
           return (
@@ -38,7 +54,6 @@ function Home() {
               <img
                 src={image.urls.regular}
                 alt={image.alt_description}
-                key={image.id}
               />
             </div>
           );
@@ -49,18 +64,3 @@ function Home() {
 }
 
 export default Home;
-
-// const [searchTerm, setSearchTerm] = useState("");
-
-// const inputHandler = (event) => {
-//   setSearchTerm(event.target.value)
-// }
-
-// const onSubmitHandler = () => {
-//   getImages(searchTerm);
-// }
-
-/* <div className="search-bar">
-        <input value={searchTerm} onChange={inputHandler} type="text"/>
-        <button onClick={onSubmitHandler}><AiOutlineSearch/></button>
-      </div> */

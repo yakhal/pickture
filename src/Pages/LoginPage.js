@@ -21,7 +21,8 @@ function LoginPage() {
     setFormFields({ ...formFields, pwd: event.target.value, isInvalid: false });
   };
 
-  const onSubmitHandler = () => {
+  const onSubmitHandler = (event) => {
+    event.preventDefault();
     if (!(formFields.user && formFields.pwd)) {
       setFormFields({ ...formFields, isInvalid: true });
     } else {
@@ -30,7 +31,7 @@ function LoginPage() {
   };
 
   return (
-    <section className="card">
+    <form onSubmit={onSubmitHandler} className="card">
       <input
         onChange={userNameChangeHandler}
         input={formFields.user}
@@ -46,10 +47,10 @@ function LoginPage() {
       {formFields.isInvalid && (
         <p className="error">Please enter the credentials properly</p>
       )}
-      <button onClick={onSubmitHandler} className="submit">
+      <button className="submit">
         Login
       </button>
-    </section>
+    </form>
   );
 }
 
