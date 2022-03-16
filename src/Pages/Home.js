@@ -42,6 +42,7 @@ function Home() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           type="text"
+          placeholder="Try searching 'Beach'"
         />
         <button>
           <AiOutlineSearch />
